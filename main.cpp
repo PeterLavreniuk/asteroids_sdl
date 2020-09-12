@@ -1,9 +1,9 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include "Ship.h"
+#include "Globals.h"
+#include "Asteroid.h"
 
-const int SCREEN_WIDTH = 1240;
-const int SCREEN_HEIGHT = 1024;
 SDL_Window* gWindow = nullptr;
 SDL_Renderer* gRenderer = nullptr;
 
@@ -59,9 +59,10 @@ int main() {
 
     const Uint8* state = SDL_GetKeyboardState(NULL);
 
-    while(!quit){
-        ship->update();
+    auto asteroid = new Asteroid();
+    asteroid->scale(10.0f);
 
+    while(!quit){
         if(state[SDL_SCANCODE_ESCAPE]){
             quit = true;
         }
@@ -79,11 +80,21 @@ int main() {
             if(e.type == SDL_QUIT){
                 quit = true;
             }
+            if(e.key.keysym.sym == SDLK_DOWN){
+                ship->slowDown();
+            }
+            if(e.key.keysym.sym == SDLK_SPACE){
+                ship->shoot();
+            }
         }
 
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderClear(gRenderer);
 
+        ship->update();
+        asteroid->update();
+
+        asteroid->render(gRenderer);
         ship->render(gRenderer);
 
         SDL_RenderPresent(gRenderer);
@@ -92,7 +103,6 @@ int main() {
         sleep = next_game_tick - SDL_GetTicks();
 
         if( sleep >= 0 ) {
-
             SDL_Delay(sleep);
         }
     }

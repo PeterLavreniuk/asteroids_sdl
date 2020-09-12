@@ -14,7 +14,8 @@ public:
     float y;
     DummyVector(float x, float y);
     void rotate(float angle);
-    void scale(float value);
+    void multiply(float value);
+    void divide(float value);
 };
 
 

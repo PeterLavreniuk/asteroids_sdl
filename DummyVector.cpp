@@ -14,12 +14,18 @@ void DummyVector::rotate(float angle) {
     auto _cos = (float)cos(angleRadian);
     auto _sin = (float)sin(angleRadian);
 
-    auto _x = this->x * _cos - this->y * _sin;
-    auto _y = this->x * _sin + this->y * _cos;
-    this->x = _x;
-    this->y = _y;
+    auto _x = x * _cos - y * _sin;
+    auto _y = x * _sin + y * _cos;
+    x = _x;
+    y = _y;
 }
 
-void DummyVector::scale(float value) {
+void DummyVector::multiply(float value) {
+    x *= value;
+    y *= value;
+}
 
+void DummyVector::divide(float value) {
+    x /= value;
+    y /= value;
 }

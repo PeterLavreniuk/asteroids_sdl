@@ -3,22 +3,22 @@
 //
 
 #include "Ship.h"
+#include "ShipBullet.h"
+#include "DummyVectorMath.h"
 
-Ship::Ship(float x, float y)  {
-    this->power = 0;
-    this->vectors = new DummyVector[3]{
+Ship::Ship(float x, float y) {
+    this->vectorsCount = 3;
+    vectors = new DummyVector[3]{
         DummyVector(-16, 16),
         DummyVector(0,-16),
         DummyVector(16,16)
     };
 
-    this->movementDirection = new DummyVector(vectors[1].x, vectors[1].y);
-
-    auto _x = ((vectors[0].x + vectors[1].x + vectors[2].x) / 3) + x;
-    auto _y = ((vectors[0].y + vectors[1].y + vectors[2].y) / 3) + y;
-
-    this->x = _x;
-    this->y = _y;
+    this->limit = 2.0f;
+    this->power = 0.0f;
+    this->x = ((vectors[0].x + vectors[1].x + vectors[2].x) / 3) + x;
+    this->y = ((vectors[0].y + vectors[1].y + vectors[2].y) / 3) + y;
+    movementDirection = new DummyVector(vectors[1].x, vectors[1].y);
 }
 
 void Ship::rotate(float angle) {
@@ -28,59 +28,75 @@ void Ship::rotate(float angle) {
 }
 
 void Ship::push() {
-    auto _power = this->power + 0.06f;
-    if(_power > 1.0f){
-        _power = 1.0f;
+    power += 10.0f;
+    if(power > 100.0f){
+        power = 100.0f;
     }
-    if(_power < 0.0f){
-        _power = 0.0f;
+    if(power < 0.0f){
+        power = 0.0f;
     }
 
-    this->power = _power;
-    this->movementDirection = new DummyVector(vectors[1].x, vectors[1].y);
+    auto _dir = new DummyVector(vectors[1].x, vectors[1].y);
+
+    auto _magnitude = DummyVectorMath::CalculateMagnitude(_dir);
+    _dir->divide(_magnitude);
+
+    movementDirection = _dir;
 }
 
 void Ship::slowDown() {
-
+    power -= 5.0f;
+    if(power <= 0.0f){
+        power = 0.0f;
+    }
 }
 
 void Ship::update() {
-    auto _power = this-> power;
-    if(_power > 0.0f){
-        _power -= 0.01f;
-    }
-    if(_power < 0.0f){
-        this->power = 0;
-        return;
-    }
-    this->power = _power;
+    recalculatePower();
 
-    this->movementDirection->x *= (_power);
-    this->movementDirection->y *= (_power);
+    GameEntity::update();
 
-    this->x += this->movementDirection->x;
-    this->y += this->movementDirection->y;
+    for(size_t i = 0; i < ShipBulletsCount; ++i){
+        if(bullets[i].IsAlive) {
+            bullets[i].update();
+        }
+    }
 }
 
 void Ship::render(SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderDrawLine(renderer,
-                       vectors[0].x + this->x,
-                       vectors[0].y + this->y,
-                       vectors[1].x + this->x,
-                       vectors[1].y + this->y);
-    SDL_RenderDrawLine(renderer,
-                       vectors[1].x + this->x,
-                       vectors[1].y + this->y,
-                       vectors[2].x + this->x,
-                       vectors[2].y + this->y);
-    SDL_RenderDrawLine(renderer,
-                       vectors[2].x + this->x,
-                       vectors[2].y + this->y,
-                       vectors[0].x + this->x,
-                       vectors[0].y + this->y);
+    GameEntity::render(renderer);
+
+    for(size_t i = 0; i < ShipBulletsCount; ++i){
+        if(bullets[i].IsAlive)
+            bullets[i].render(renderer);
+    }
 }
 
 Ship::~Ship() {
-    delete [] this->vectors;
+    delete [] vectors;
+}
+
+void Ship::shoot() {
+    for(size_t i = 0; i < ShipBulletsCount; ++i){
+        if(!bullets[i].IsAlive){
+            bullets[i].IsAlive = true;
+            bullets[i].setPosition(x,y,&vectors[1]);
+            return;
+        }
+    }
+}
+
+void Ship::recalculatePower() {
+    if(power > 0.0f){
+        if(power > 20.0f) {
+            power -= 0.25f;
+        }
+        else{
+            power -= 0.1f;
+        }
+    }
+
+    if(power <= 0.0f){
+        power = 0;
+    }
 }
