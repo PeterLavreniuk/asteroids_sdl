@@ -9,9 +9,8 @@
 #define ASTEROIDS_SHIP_H
 
 
-class Ship : GameEntity{
+class Ship : public GameEntity{
 private:
-    ShipBullet bullets[ShipBulletsCount];
     void recalculatePower();
 public:
     Ship(float x, float y);
@@ -20,7 +19,7 @@ public:
     void slowDown();
     void update() override;
     void render(SDL_Renderer* renderer) override;
-    void shoot();
+    ShipBullet* shoot();
     ~Ship();
 };
 

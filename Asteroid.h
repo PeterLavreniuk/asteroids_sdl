@@ -8,23 +8,31 @@
 
 #include <SDL2/SDL_render.h>
 #include "GameEntity.h"
+#include "random"
+#include "ShipBullet.h"
 
-class Asteroid : GameEntity {
+class Asteroid : public GameEntity {
 private:
-    void generateRandomPosition();
-    void generateRandomMovementDirection();
     enum AsteroidRotateDirection{
         ASTEROID_ROTATE_LEFT,
         ASTEROID_ROTATE_RIGHT,
         ASTEROID_ROTATE_UNDEFINED
     };
     AsteroidRotateDirection direction;
+    AsteroidType type;
+    float collisionRadius = 0.0f;
+    void scale();
+    static int diceRoll(int lowerBound, int upperBound);
+    void generateRandomPosition();
+    void generateRandomMovementDirection();
+    float getCollisionRadius(AsteroidType type);
 public:
-    Asteroid();
+    Asteroid(AsteroidType type);
+    Asteroid(AsteroidType type, float x, float y);
     void update() override;
-    void scale(float value);
-
     void render(SDL_Renderer* renderer) override;
+    AsteroidType getType() { return type; }
+    bool CollisionHappens(GameEntity* entity);
 };
 
 

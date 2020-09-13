@@ -22,11 +22,12 @@ protected:
     float power = 2.0f;
     size_t vectorsCount = 0;
     virtual void checkScreenCollision();
-
 public:
+    bool isAlive;
     virtual void update();
     virtual void render(SDL_Renderer* renderer);
-    bool IsAlive;
+    float getX() const{ return this->x; }
+    float getY() const{ return this->y; }
 };
 
 

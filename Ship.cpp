@@ -9,9 +9,9 @@
 Ship::Ship(float x, float y) {
     this->vectorsCount = 3;
     vectors = new DummyVector[3]{
-        DummyVector(-16, 16),
-        DummyVector(0,-16),
-        DummyVector(16,16)
+            DummyVector(-16, 16),
+            DummyVector(0,-16),
+            DummyVector(16,16)
     };
 
     this->limit = 2.0f;
@@ -55,35 +55,18 @@ void Ship::update() {
     recalculatePower();
 
     GameEntity::update();
-
-    for(size_t i = 0; i < ShipBulletsCount; ++i){
-        if(bullets[i].IsAlive) {
-            bullets[i].update();
-        }
-    }
 }
 
 void Ship::render(SDL_Renderer *renderer) {
     GameEntity::render(renderer);
-
-    for(size_t i = 0; i < ShipBulletsCount; ++i){
-        if(bullets[i].IsAlive)
-            bullets[i].render(renderer);
-    }
 }
 
 Ship::~Ship() {
     delete [] vectors;
 }
 
-void Ship::shoot() {
-    for(size_t i = 0; i < ShipBulletsCount; ++i){
-        if(!bullets[i].IsAlive){
-            bullets[i].IsAlive = true;
-            bullets[i].setPosition(x,y,&vectors[1]);
-            return;
-        }
-    }
+ShipBullet* Ship::shoot() {
+    return new ShipBullet(x,y,&vectors[1]);
 }
 
 void Ship::recalculatePower() {

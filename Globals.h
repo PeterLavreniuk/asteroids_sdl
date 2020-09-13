@@ -8,6 +8,18 @@
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int ShipBulletsCount = 10;
+const int SHIP_BULLETS_COUNT = 10;
+const float BIG_ASTEROID_SCALE = 8.0f;
+const float MID_ASTEROID_SCALE = 6.0f;
+const float SMALL_ASTEROID_SCALE = 3.0f;
+const float BIG_ASTEROID_COLLISION_RADIUS = 30.0f;
+const float MID_ASTEROID_COLLISION_RADIUS = 23.0f;
+const float SMALL_ASTEROID_COLLISION_RADIUS = 12.0f;
+
+enum AsteroidType{
+    ASTEROID_BIG_TYPE,
+    ASTEROID_MID_TYPE,
+    ASTEROID_SMALL_TYPE
+};
 
 #endif //ASTEROIDS_GLOBALS_H

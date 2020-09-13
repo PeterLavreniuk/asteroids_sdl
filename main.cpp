@@ -2,10 +2,14 @@
 #include <SDL2/SDL.h>
 #include "Ship.h"
 #include "Globals.h"
-#include "Asteroid.h"
+#include "EntitiesCollection.h"
+#include "ShipInputHandler.h"
 
 SDL_Window* gWindow = nullptr;
 SDL_Renderer* gRenderer = nullptr;
+EntitiesCollection* entitiesCollection = nullptr;
+Ship* ship = nullptr;
+ShipInputHandler* shipInputHandler = nullptr;
 
 bool init(){
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -43,7 +47,10 @@ void clear(){
 }
 
 int main() {
-    auto ship = new Ship(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    ship = new Ship(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+
+    entitiesCollection = new EntitiesCollection(ship);
+    shipInputHandler = new ShipInputHandler(ship, entitiesCollection);
 
     if(!init()){
         std::cout << "init failed" << std::endl;
@@ -59,43 +66,27 @@ int main() {
 
     const Uint8* state = SDL_GetKeyboardState(NULL);
 
-    auto asteroid = new Asteroid();
-    asteroid->scale(10.0f);
-
     while(!quit){
         if(state[SDL_SCANCODE_ESCAPE]){
             quit = true;
         }
-        if (state[SDL_SCANCODE_UP]) {
-            ship->push();
-        }
-        if (state[SDL_SCANCODE_LEFT]) {
-            ship->rotate(-4.0f);
-        }
-        if (state[SDL_SCANCODE_RIGHT]) {
-            ship->rotate(4.0f);
-        }
+        shipInputHandler->handle(state);
 
         while(SDL_PollEvent(&e) != 0){
             if(e.type == SDL_QUIT){
                 quit = true;
             }
-            if(e.key.keysym.sym == SDLK_DOWN){
-                ship->slowDown();
-            }
-            if(e.key.keysym.sym == SDLK_SPACE){
-                ship->shoot();
-            }
+
+            shipInputHandler->handle(e.key.keysym.sym);
         }
 
         SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
         SDL_RenderClear(gRenderer);
 
-        ship->update();
-        asteroid->update();
-
-        asteroid->render(gRenderer);
-        ship->render(gRenderer);
+        entitiesCollection->checkCollisions();
+        entitiesCollection->generateEntities();
+        entitiesCollection->updateEntities();
+        entitiesCollection->renderEntities(gRenderer);
 
         SDL_RenderPresent(gRenderer);
 

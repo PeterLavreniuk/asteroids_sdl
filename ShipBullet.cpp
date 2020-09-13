@@ -16,19 +16,16 @@ void ShipBullet::update() {
     GameEntity::update();
 }
 
-ShipBullet::ShipBullet() {
-
-}
-
 void ShipBullet::checkScreenCollision() {
     if(x > SCREEN_WIDTH || x < 0 ||
        y > SCREEN_HEIGHT || y < 0){
-        IsAlive = false;
+        this->isAlive = false;
     }
 }
 
-void ShipBullet::setPosition(float x, float y, DummyVector *direction) {
+ShipBullet::ShipBullet(float x, float y, DummyVector *direction) {
     this->x = x;
     this->y = y;
     this->movementDirection = new DummyVector(direction->x, direction->y);
+    this->isAlive = true;
 }
