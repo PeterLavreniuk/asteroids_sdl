@@ -21,14 +21,10 @@ private:
     AsteroidRotateDirection direction;
     AsteroidType type;
     float collisionRadius = 0.0f;
-    void scale();
-    static int diceRoll(int lowerBound, int upperBound);
-    void generateRandomPosition();
-    void generateRandomMovementDirection();
-    float getCollisionRadius(AsteroidType type);
 public:
-    Asteroid(AsteroidType type);
-    Asteroid(AsteroidType type, float x, float y);
+    Asteroid(float x, float y, float collisionRadius,
+             AsteroidType type, DummyVector* shape,
+             DummyVector* movementDirection);
     void update() override;
     void render(SDL_Renderer* renderer) override;
     AsteroidType getType() { return type; }

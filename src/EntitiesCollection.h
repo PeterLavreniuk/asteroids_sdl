@@ -9,12 +9,14 @@
 #include "Asteroid.h"
 #include "ShipBullet.h"
 #include "Ship.h"
+#include "AsteroidsFactory.h"
 
 class EntitiesCollection {
 private:
     std::vector<Asteroid> asteroids;
     std::vector<ShipBullet> bullets;
     Ship* ship;
+    AsteroidsFactory* asteroidsFactory;
     int aliveBulletsCount = 0;
     int aliveAsteroids = 0;
     int aliveBigAsteroids = 0;

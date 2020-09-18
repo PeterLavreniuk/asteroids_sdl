@@ -6,6 +6,8 @@
 #define ASTEROIDS_GLOBALS_H
 
 
+#include <random>
+
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 const int SHIP_BULLETS_COUNT = 10;
@@ -21,5 +23,11 @@ enum AsteroidType{
     ASTEROID_MID_TYPE,
     ASTEROID_SMALL_TYPE
 };
+
+static int diceRoll(int lowerBound, int upperBound){
+    std::default_random_engine generator(std::random_device{}());
+    std::uniform_int_distribution<int> distribution(lowerBound,upperBound);
+    return distribution(generator);
+}
 
 #endif //ASTEROIDS_GLOBALS_H

@@ -5,12 +5,8 @@
 #include "ShipBullet.h"
 
 void ShipBullet::render(SDL_Renderer *renderer) {
-    SDL_RenderDrawPoint(renderer,
-                        x,
-                        y);
+    SDL_RenderDrawPoint(renderer, x, y);
 }
-
-
 
 void ShipBullet::update() {
     GameEntity::update();
@@ -26,6 +22,5 @@ void ShipBullet::checkScreenCollision() {
 ShipBullet::ShipBullet(float x, float y, DummyVector *direction) {
     this->x = x;
     this->y = y;
-    this->movementDirection = new DummyVector(direction->x, direction->y);
-    this->isAlive = true;
+    this->movementDirection = direction;
 }

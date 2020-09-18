@@ -87,6 +87,7 @@ void EntitiesCollection::renderEntities(SDL_Renderer *renderer) {
 
 EntitiesCollection::EntitiesCollection(Ship *ship) {
     this->ship = ship;
+    this->asteroidsFactory = new AsteroidsFactory();
 }
 
 void EntitiesCollection::generateEntities() {
@@ -105,7 +106,7 @@ void EntitiesCollection::addEntity(ShipBullet *bullet) {
 
 void EntitiesCollection::createAsteroids(int count, AsteroidType type) {
     for(int i = 0; i < count; ++i) {
-        auto asteroid = new Asteroid(type);
+        auto asteroid = asteroidsFactory->create(type);
         asteroids.push_back(*asteroid);
         ++aliveAsteroids;
         if(type == ASTEROID_SMALL_TYPE)
@@ -119,7 +120,7 @@ void EntitiesCollection::createAsteroids(int count, AsteroidType type) {
 
 void EntitiesCollection::createAsteroids(int count, AsteroidType type, float x, float y) {
     for(int i = 0; i < count; ++i) {
-        auto asteroid = new Asteroid(type,x ,y);
+        auto asteroid = asteroidsFactory->create(type, x, y);
         asteroids.push_back(*asteroid);
         ++aliveAsteroids;
         if(type == ASTEROID_SMALL_TYPE)

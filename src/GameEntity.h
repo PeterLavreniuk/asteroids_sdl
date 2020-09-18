@@ -23,7 +23,7 @@ protected:
     size_t vectorsCount = 0;
     virtual void checkScreenCollision();
 public:
-    bool isAlive;
+    bool isAlive = true;
     virtual void update();
     virtual void render(SDL_Renderer* renderer);
     float getX() const{ return this->x; }
